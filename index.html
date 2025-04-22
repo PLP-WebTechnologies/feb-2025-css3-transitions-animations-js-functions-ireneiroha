@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Animation + localStorage Demo</title>
+
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      padding-top: 60px;
+      background: #f9f9f9;
+    }
+
+    /* Smooth animated button */
+    .btn {
+      padding: 12px 24px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      background-color: #007BFF;
+      color: white;
+      cursor: pointer;
+      margin: 10px;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    .btn:hover {
+      background-color: #0056b3;
+      transform: scale(1.05);
+    }
+
+    /* Box that shows stored data */
+    #outputBox {
+      margin-top: 40px;
+      width: 300px;
+      margin-inline: auto;
+      padding: 20px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    /* Animation trigger class */
+    .visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Image animation */
+    img {
+      width: 120px;
+      margin-top: 30px;
+      transition: transform 0.4s ease-in-out;
+    }
+
+    img.animated {
+      transform: rotate(360deg) scale(1.1);
+    }
+  </style>
+</head>
+<body>
+
+  <button class="btn" onclick="savePreferences()">Save Preferences</button>
+  <button class="btn" onclick="loadPreferences()">Load Preferences</button>
+
+  <div id="outputBox">
+    <p>Stored data will appear here.</p>
+  </div>
+
+  <img id="icon" src="image/coffee.jpg" alt="Coffee on phone screen" width="120" height="120">
+
+
+  <script>
+    // Save user preferences to localStorage
+    function savePreferences() {
+      const preferences = {
+        language: "English",
+        theme: "Light"
+      };
+      localStorage.setItem("userPrefs", JSON.stringify(preferences));
+      triggerAnimation("Preferences saved.");
+    }
+
+    // Load user preferences and animate display
+    function loadPreferences() {
+      const data = localStorage.getItem("userPrefs");
+      const box = document.getElementById("outputBox");
+      if (data) {
+        const prefs = JSON.parse(data);
+        box.innerHTML = `<p>Language: ${prefs.language}<br>Theme: ${prefs.theme}</p>`;
+      } else {
+        box.innerHTML = `<p>No preferences found.</p>`;
+      }
+      animateBox();
+    }
+
+    // Show and animate box
+    function triggerAnimation(message) {
+      const box = document.getElementById("outputBox");
+      box.innerHTML = `<p>${message}</p>`;
+      animateBox();
+    }
+
+    // Apply animation to output box and image
+    function animateBox() {
+      const box = document.getElementById("outputBox");
+      const img = document.getElementById("icon");
+
+      box.classList.remove("visible");
+      img.classList.remove("animated");
+
+      void box.offsetWidth;
+      void img.offsetWidth;
+
+      box.classList.add("visible");
+      img.classList.add("animated");
+
+      setTimeout(() => {
+        img.classList.remove("animated");
+      }, 500);
+    }
+  </script>
+
+</body>
+</html>
